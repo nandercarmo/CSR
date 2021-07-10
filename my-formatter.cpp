@@ -2,25 +2,24 @@
 #include <string>
 #include <vector>
 
-typedef std::string MyString;
-typedef std::vector<MyString> MyStringVector;
-typedef std::vector<MyString>::iterator MyIterator;
+typedef std::vector<std::string> MyStringVector;
+typedef std::vector<std::string>::iterator MyIterator;
 
-MyString justifyParagraph(const MyString &, int);
-MyStringVector getParagraphWords(const MyString &);
-MyString getFormattedRow(MyIterator &, MyIterator &, int, int, bool);
+std::string justifyParagraph(const std::string &, int);
+MyStringVector getParagraphWords(const std::string &);
+std::string getFormattedRow(MyIterator &, MyIterator &, int, int, bool);
 void printVector(MyStringVector &);
 
 int main() {
 
-	MyString originalParagraph = "New component JYScrollPaneMap which is pretty useful    for large scrollpane views";
+	std::string originalParagraph = "New component JYScrollPaneMap which is pretty useful    for large scrollpane views";
 	std::cout << originalParagraph << std::endl;
 
-	MyString formattedParagraph = justifyParagraph(originalParagraph, 35);
+	std::string formattedParagraph = justifyParagraph(originalParagraph, 35);
 	std::cout << formattedParagraph << std::endl;
 }
 
-MyString justifyParagraph(const MyString & input, int targetLength) {
+std::string justifyParagraph(const std::string & input, int targetLength) {
 
 	MyStringVector words = getParagraphWords(input);
 	printVector(words);
@@ -28,7 +27,7 @@ MyString justifyParagraph(const MyString & input, int targetLength) {
 	int rowCharCount = 0;
 	int rowSpacesCount = -1;
 
-	MyString formatted = "";
+	std::string formatted = "";
 	MyIterator rowFirstWord = words.begin();
     MyIterator rowLastWord = words.begin();
 
@@ -65,9 +64,9 @@ MyString justifyParagraph(const MyString & input, int targetLength) {
 }
 
 
-MyStringVector getParagraphWords(const MyString & paragraph) {
+MyStringVector getParagraphWords(const std::string & paragraph) {
 
-	MyString newWord = "";
+	std::string newWord = "";
 	MyStringVector words;
 
 	for(char character : paragraph) {
@@ -88,10 +87,10 @@ MyStringVector getParagraphWords(const MyString & paragraph) {
 	return words;
 }
 
-MyString getFormattedRow(MyIterator & rowFirstWord, MyIterator & rowLastWord, int rowCharCount, int targetLength, bool isLastRow) {
+std::string getFormattedRow(MyIterator & rowFirstWord, MyIterator & rowLastWord, int rowCharCount, int targetLength, bool isLastRow) {
 
 	int rowSpacesCount = 0;
-	MyString formatted = "";
+	std::string formatted = "";
 
 	std::cout << std::endl;
 	for(MyIterator it = rowFirstWord; it < rowLastWord + 1; ) {
@@ -120,7 +119,7 @@ void printVector(MyStringVector & vctr) {
     else {
 
 		std::cout << "[ ";
-        for(MyString str : vctr ) std::cout << "\"" << str << "\" ";
+        for(std::string str : vctr ) std::cout << "\"" << str << "\" ";
         std::cout << "]" << std::endl;
     }
 }
