@@ -15,7 +15,7 @@ int main() {
 	std::string originalParagraph = "New component JYScrollPaneMap which is pretty useful    for large scrollpane views";
 	std::cout << originalParagraph << std::endl;
 
-	std::string formattedParagraph = justifyParagraph(originalParagraph, 35);
+	std::string formattedParagraph = justifyParagraph(originalParagraph, 5);
 	std::cout << formattedParagraph << std::endl;
 }
 
@@ -34,7 +34,7 @@ std::string justifyParagraph(const std::string & input, int targetLength) {
 	std::cout << std::endl;
 	for(MyIterator word = words.begin(); word < words.end(); ) {
 		
-		if(rowCharCount + rowSpacesCount + 1 + word->length() < targetLength) {
+		if((rowCharCount == 0) || (rowCharCount + rowSpacesCount + 1 + word->length() < targetLength)) {
 
 			rowLastWord = word;
 			++rowSpacesCount;
@@ -97,7 +97,7 @@ std::string getFormattedRow(MyIterator & rowFirstWord, MyIterator & rowLastWord,
 		
 		std::cout << "\trendering: " << *it << ", char (" << rowCharCount << "), spaces (" << rowSpacesCount << ") => row (" << rowCharCount + rowSpacesCount << ")" << std::endl;
 
-		if(rowCharCount + rowSpacesCount == targetLength - 1) break;
+		if((rowCharCount + rowSpacesCount >= targetLength - 1) || rowFirstWord == rowLastWord) break;
 		else if(isLastRow && it == rowLastWord) break;
 		else if(it == rowLastWord) it = rowFirstWord;
 		else {
