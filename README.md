@@ -10,7 +10,7 @@ Julho de 2021.
 - [Questão 1](#questão-1)
 - [Questão 2](#questão-2)
 - [Questão 3](#questão-3)
-	- [Classe](#classe)
+	- [Implementação da Classe](#implementação-da-classe)
 	- [Novas Formatações](#novas-formatações)
 	- [Herança x Tratamento Condicional](#herança-x-tratamento-condicional)
 - [Questão 4](#questão-4)
@@ -141,7 +141,77 @@ Para implementar essa nova funcionalidade foi preciso apenas adicionar mais uma 
   <img src="resources/q3.png">
 </p>
 
-### **Classe**
+### **Implementação da Classe**
+
+A implementação final do formatador utilizando classe está contida nos arquivos abaixo:
+
+- [source/question3/paragraph.h](source/question3/paragraph.h)
+- [source/question3/paragraph.cpp](source/question3/paragraph.cpp)
+- [source/question3/document.h](source/question3/document.h)
+- [source/question3/document.cpp](source/question3/document.cpp)
+- [source/question3/main.cpp](source/question3/main.cpp)
+
+Para a implementação do mesmo formatador utilizando classes foi realizado o seguinte raciocício: as funções implementadas no formatador **justifyParagraph**, **getParagraphWords** e **getFormattedRow** correspondem a manipulações que são realizadas nos parágrafos e logo foram transformadas em métodos da classe **Paragraph**; já as funções **justifyDocument**, **getParagraphs** são funções intrínsecas ao documento e, assim, foram transformadas em métodos da classe **Document**.
+
+As funções equivalente à classe **Paragraph** foram renomeadas e receberam novas assinaturas, de forma a ficar mais legível no contexto de uma classe, ficando da seguinte forma:
+
+- justifyParagraph -> **format**
+- getParagraphWords -> **getWords**
+- getFormattedRow -> **formatRow**
+
+As funções equivalente à classe **Document** foram renomeadas e receberam uma nova assinatura, de forma a ficar mais legível no contexto de uma classe, ficando da seguinte forma:
+
+- justifyDocument -> **format**
+- getParagraphs -> **getParagraphs**
+
+Além disso, as variáveis utilizadas dentro das funções e que são passadas como parâmetros foram transformadas em campos das classes. Dessa forma, a definição das duas classes ficou da seguinte forma:
+
+```cpp
+class Paragraph {
+	
+	public:
+
+		Paragraph(const std::string &);
+		std::string render() const;
+		void setTargetLength(int);
+		void format();
+
+	private:
+
+		std::string m_input;
+		std::string m_formatted;
+		std::vector<std::string> m_words;
+		std::vector<std::string>::iterator m_rowFirstWord;
+		std::vector<std::string>::iterator m_rowLastWord;
+		int m_targetLength;
+		int m_rowSpacesCount;
+		int m_rowCharCount;
+
+		void formatRow(bool);
+		void getWords();
+};
+```
+
+```cpp
+class Document {
+	
+	public:
+
+		Document(const std::string & input);
+		std::string render() const;
+		void setTargetLength(int);
+		void format();
+
+	private:
+
+		std::vector<Paragraph> m_paragraphs;
+		std::string m_input;
+		std::string m_formatted;
+		int m_targetLength;
+
+		void getParagraphs();
+}; 
+```
 
 ### **Novas Formatações**
 
