@@ -12,7 +12,7 @@ Julho de 2021.
 - [Questão 3](#questão-3)
 	- [Classe](#classe)
 	- [Novas Formatações](#novas-formatações)
-	- [Herança x Herança x Tratamento Condicional](#herança-x-tratamento-condicional)
+	- [Herança x Tratamento Condicional](#herança-x-tratamento-condicional)
 - [Questão 4](#questão-4)
 	- [Referências x Ponteiros](#referências-x-ponteiros)
 	- [Smart Pointers](#smart-pointers)
@@ -26,6 +26,71 @@ Julho de 2021.
   <img src="resources/q1.png">
 </p>
 
+O formatador de texto especificado foi implementado e está disponível no arquivo:
+
+- [source/question1/my-formatter.cpp](source/question1/my-formatter.cpp)
+
+Para implementar o formatador descrito foram criadas as seguintes funções auxiliares, cujos parâmetros, retorno e funcionalidade básica serão detalhadas a seguir:
+
+- *MyStringVector*:
+	
+	```cpp 
+	typedef std::vector<std::string> MyStringVector;
+	```
+
+	Esse tipo foi criado para facilitar o desenvolvimento utilizando um vetor de strings.
+
+- MyVectorIterator:
+
+	```cpp 
+	typedef MyStringVector::iterator MyVectorIterator;
+	```
+
+	Esse tipo foi criado para facilitar o uso de iterators do tipo vetor de strings.
+
+- *justifyParagraph*
+
+	```cpp 
+	std::string justifyParagraph(const std::string & input, int targetLength);
+	```
+
+	- Parâmetros: uma string **input** contendo o texto que se deseja formatar e um inteiro **targetLength** reponsável por indicar a largura final do texto.
+
+	- Retorno: uma string contendo o texto formatado.
+
+	- Funcionalidade: realiza a extração das palavras do texto, através da chamada da fução getParagraphWords, seguida da definição de quais palavras estarão em cada linha do texto. Feito isso a função getFormattedRow é chamada para efetivamente formatar a linha desejada com o alinhamento justificado.
+	
+
+- *getParagraphWords*
+
+	```cpp 
+	MyStringVector getParagraphWords(const std::string & paragraph);
+	```
+
+	- Parâmetros: uma string **pargraph** contendo o parágrafo que será formatado.
+	- Retorno: um vetor de strings contendo todas as palavras (e símbolos) do parágrafo.
+	- Funcionalidade: percorre o parágrafo realizando o tratamento do texto, eliminando qualquer espaço presente no texto e retornando apenas as palavras e símbolos.
+
+- *getFormattedRow*
+
+	```cpp 
+	std::string getFormattedRow(MyVectorIterator & rowFirstWord, MyVectorIterator & rowLastWord, int rowCharCount, int targetLength, bool isLastRow);
+	```
+
+	- Parâmetros: dois iterators **rowFistWord** e **rowLastWord**, responsáveis por armazenar a primeira e a última palavra do vetor que deverá aparecer na linha a ser formatada, um inteiro **rowCharCount** contendo a quantidade de caracteres válidos (que não são espaços) que a linha possui, um inteiro **targetLength** contendo a largura da linha e, por fim um booleano **isLastRow** que indica se a linha sendo formatada é a última linha do parágrafo (essa linha não deve ser formatada).
+	- Retorno: uma string contendo a linha formatada.
+	- Funcionalidade: percorre as palavras do parágrafo que deverão estar presentes da linha adicionando espaçamento entre elas, até atingir a largura total da linha.
+
+- *printVector*
+
+	```cpp 
+	void printVector(MyStringVector & vctr);
+	```
+
+	- Parâmetros: um vetor **vctr** que se deseja printar.
+	- Retorno: essa função não retorna nada.
+	- Funcionalidade: essa função auxiliar percorre as strings do vetor passado como parâmetro e printa esses valores formatados.
+	
 ---
 
 ## **Questão 2**
