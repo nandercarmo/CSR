@@ -1,5 +1,6 @@
-my-formatter
-my-formatter-2
+source/question1/my-formatter
+source/question2/my-formatter-2
+source/question3/main
 
 # Prerequisites
 *.d

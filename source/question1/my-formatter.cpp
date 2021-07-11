@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 
+#define DEBUG false
+
 typedef std::vector<std::string> MyStringVector;
 typedef MyStringVector::iterator MyVectorIterator;
 
@@ -14,7 +16,7 @@ int main() {
 
 	std::string originalParagraph = "New component JYScrollPaneMap which is pretty useful    for large scrollpane views";
 	std::cout << originalParagraph << std::endl;
-
+	std::cout << std::endl;
 	std::string formattedParagraph = justifyParagraph(originalParagraph, 35);
 	std::cout << formattedParagraph << std::endl;
 }
@@ -31,7 +33,7 @@ std::string justifyParagraph(const std::string & input, int targetLength) {
 	MyVectorIterator rowFirstWord = words.begin();
     MyVectorIterator rowLastWord = words.begin();
 
-	std::cout << std::endl;
+	if(DEBUG) std::cout << std::endl;
 	for(MyVectorIterator word = words.begin(); word < words.end(); ) {
 		
 		if((rowCharCount == 0) || (rowCharCount + rowSpacesCount + 1 + word->length() < targetLength)) {
@@ -40,7 +42,7 @@ std::string justifyParagraph(const std::string & input, int targetLength) {
 			++rowSpacesCount;
 			rowCharCount += word->length();
 
-			std::cout << *word << " (" << word->length() << ") -> " << "fits: char (" << rowCharCount << "), spaces (" << rowSpacesCount << ") => row (" << rowCharCount + rowSpacesCount << ")" << std::endl;
+			if(DEBUG) std::cout << *word << " (" << word->length() << ") -> " << "fits: char (" << rowCharCount << "), spaces (" << rowSpacesCount << ") => row (" << rowCharCount + rowSpacesCount << ")" << std::endl;
 
 			if(++word == words.end()) formatted += getFormattedRow(rowFirstWord, rowLastWord, rowCharCount, targetLength, true);
 
@@ -54,11 +56,11 @@ std::string justifyParagraph(const std::string & input, int targetLength) {
 			rowFirstWord = word;
 			rowLastWord = rowFirstWord;
 
-			std::cout << std::endl;
+			if(DEBUG) std::cout << std::endl;
 		}
 	}
 
-	std::cout << std::endl;
+	if(DEBUG) std::cout << std::endl;
 
 	return formatted;
 }
@@ -116,10 +118,10 @@ std::string getFormattedRow(MyVectorIterator & rowFirstWord, MyVectorIterator & 
 	int rowSpacesCount = 0;
 	std::string formatted = "";
 
-	std::cout << std::endl;
+	if(DEBUG) std::cout << std::endl;
 	for(MyVectorIterator it = rowFirstWord; it < rowLastWord + 1; ) {
 		
-		std::cout << "\trendering: " << *it << ", char (" << rowCharCount << "), spaces (" << rowSpacesCount << ") => row (" << rowCharCount + rowSpacesCount << ")" << std::endl;
+		if(DEBUG) std::cout << "\trendering: " << *it << ", char (" << rowCharCount << "), spaces (" << rowSpacesCount << ") => row (" << rowCharCount + rowSpacesCount << ")" << std::endl;
 
 		if((rowCharCount + rowSpacesCount >= targetLength - 1) || rowFirstWord == rowLastWord) break;
 		else if(isLastRow && it == rowLastWord) break;
@@ -140,11 +142,11 @@ std::string getFormattedRow(MyVectorIterator & rowFirstWord, MyVectorIterator & 
 
 void printVector(MyStringVector & vctr) {
 
-    if(vctr.empty()) std::cout << "[ empty ]";
+    if(vctr.empty()) if(DEBUG) std::cout << "[ empty ]";
     else {
 
-		std::cout << "[ ";
-        for(std::string str : vctr ) std::cout << "\"" << str << "\" ";
-        std::cout << "]" << std::endl;
+		if(DEBUG) std::cout << "[ ";
+        for(std::string str : vctr ) if(DEBUG) std::cout << "\"" << str << "\" ";
+        if(DEBUG) std::cout << "]" << std::endl;
     }
 }
