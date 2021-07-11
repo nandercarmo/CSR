@@ -1,7 +1,5 @@
 # **CSR**
-Teste de habilidades da vaga de desenvolvedor do [**CSR**](https://csr.ufmg.br/csr/pt/) de **Nander Carmo**.
-
-Julho de 2021.
+Resolução do teste de habilidades do [**CSR**](https://csr.ufmg.br/csr/pt/), por [Nander Carmo](https://www.linkedin.com/in/nander-carmo)
 
 ---
 
