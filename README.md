@@ -608,4 +608,36 @@ Porém, existem também desvantagens, como:
   <img src="resources/q5.png">
 </p>
 
+Por definição, [RAII](https://en.cppreference.com/w/cpp/language/raii) (Resource Acquisition Is Initialization, ou Aquisição de Recurso é Inicialização) é um padrão de projeto de software que ajuda a tornar segura a manipulação de recursos (muitas vezes sensíveis). Esse segurança bem do fato de que o tempo de vida do recurso fica vinculado ao tempo de vida de um objeto. Dessa forma, a aquisição do recurso fica diretamente associada à inicialização de um objeto, enquanto a liberação desse mesmo recurso fica associada à destruição desse objeto, em outras palavras, o recurso é solicitado pelo contrutor do objeto e é liberado pelo destrutor.
+
+Assim, é possível substituir o uso do try/catch porque, independente do caminho que a execução do programa assuma, é garantido que o recurso será liberado quando o objeto ao qual ele está vinculado for destruído, não sendo preciso realizar a liberação do recurso em um tratamento de excessão.
+
+Portanto, as modificações necessárias de serem realizadas está na remoção do try/catch e na criação de uma classe para o tipo File da seguinte forma (obs: nesse momento eu considerei que o tipo File existe, apesar de ser fictício e que para a implementação da RAII eu poderia criar uma classe nova):
+
+```cpp
+class File {
+
+	public:
+
+		File();
+		~File();
+		bool open(const std::string & fileName);
+		char read();
+		void close();
+};
+
+class FileRAII {
+
+	private:
+
+		File _file;
+
+	public:
+
+		FileRAII(const std::string & fileName) { this->_file.open(fileName); }
+		~FileRAII() { this->_file.close(); }
+		char read() { return this->_file.read(); }
+};
+```
+
 ---
