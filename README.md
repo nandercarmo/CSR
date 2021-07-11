@@ -11,6 +11,7 @@ Julho de 2021.
 - [Questão 2](#questão-2)
 - [Questão 3](#questão-3)
 	- [Classe](#classe)
+	- [Novas Formatações](#novas-formatações)
 	- [Herança x Herança x Tratamento Condicional](#herança-x-tratamento-condicional)
 - [Questão 4](#questão-4)
 	- [Referências x Ponteiros](#referências-x-ponteiros)
@@ -33,10 +34,6 @@ Julho de 2021.
   <img src="resources/q2.png">
 </p>
 
-### **Classe**
-
-### **Herança x Tratamento Condicional**
-
 ---
 
 ## **Questão 3**
@@ -44,6 +41,130 @@ Julho de 2021.
 <p align="center">
   <img src="resources/q3.png">
 </p>
+
+### **Classe**
+
+### **Novas Formatações**
+
+Para implementar novos formatadores utilizando de herança seria necessário, primeiro transformar o método *Paragraph::formatRow()* em um método virtual, para permitir que ele seja reimplementada por outras classes que herdem a classe básica *Paragraph*. Além disso, para que as classes herdeiras tenham acesso aos métodos e campos marcados *private* originalmente, será preciso alterar esse marcador para *protected*. Dessa forma:
+
+```cpp
+class Paragraph {
+	
+	public:
+
+		Paragraph(const std::string &);
+		std::string render() const;
+		void setTargetLength(int);
+		void format();
+
+	protected:
+
+		std::string m_input;
+		std::string m_formatted;
+		std::vector<std::string> m_words;
+		std::vector<std::string>::iterator m_rowFirstWord;
+		std::vector<std::string>::iterator m_rowLastWord;
+		int m_targetLength;
+		int m_rowSpacesCount;
+		int m_rowCharCount;
+
+		virtual void formatRow(bool);
+		void getWords();
+};
+```
+
+Dessa forma, será possível criar classes que herdam da classe *Paragraph* e possuem seus próprios métodos *formatRow*:
+
+```cpp
+class CentralizedParagraph : public Paragraph  {
+
+	public:
+
+		...
+
+	protected:
+
+		virtual void formatRow(bool) override;
+		// Reimplementação do método de formatar linha para retornar a linha centralizada
+}
+
+class LeftAlignedParagraph : public Paragraph {
+
+	public:
+
+		...
+
+	protected:
+
+		virtual void formatRow(bool) override; 
+		// Reimplementação do método de formatar linha para retornar a linha alinhada à esquerda
+}
+
+class RightAlignedParagraph : public Paragraph {
+
+	public:
+
+		...
+
+	protected:
+
+		virtual void formatRow(bool) override;
+		// Reimplementação do método de formatar linha para retornar a linha alinhada à direita
+}
+```
+
+Enquanto isso, a classe pai *Pargraph* possui como padrão o método formatRow retornando um parágrafo justificado, conforme já demonstrado anteriormente.
+
+No caso da classe *Document* não será necessário reimplementar nenhum método, porém, como as novas classes herdeiras utilização uma classe filha da *Paragraph* e a classe *Document* possui um campo dependente do tipo de parágrafo (*Document::_m_pargraph*), será preciso utilizar de *templates* para simplificar essa implementação. Dessa forma a classe pai *Document* e as classes herdeiras ficarão da seguinte forma:
+
+```cpp
+template<typename T>
+class Document {
+	
+	public:
+
+		...
+
+	protected:
+
+		std::vector<T> m_paragraphs;
+
+		...
+};
+
+class CentralizedDocument : public Document<CentralizedPargraph> {
+	
+	...
+};
+
+class LeftAlignedDocument : public Document<LeftAlignedPargraph> {
+	
+	...
+};
+
+class RightAlignedDocument : public Document<RightAlignedPargraph> {
+	
+	...
+};
+```
+
+### **Herança x Tratamento Condicional**
+
+Vantagens do uso de herança em relação a ifs/switches:
+
+- O excesso de ifs (ou um switch muito extenso) pode aumentar muito a complexidade de um código e dificultar modificações e a manutenção do código, visto que, invariavelmente, quando uma verificação nesse estilo é necessário em um determinado ponto do código, essa mesma verificação poderá ser necessária em outras regiões. Dessa forma, é possível que erros sejam cometidos por não realizar uma determinada alteração em todo o código, criando falhas de execução. Além disso, essa prática viola o conceito de DRY (Don't repeat yourself), considerada uma boa prática de programação.
+- O uso de herança aumenta a legibilidade do código e torna mais simples seu entendimento
+
+Desvantagens do uso de herança em relação a ifs/switches:
+
+- O uso indiscriminado de herança pode provocar um acoplamento indesejado entre classes, caso não seja feito de forma consciente. Esse acoplamento pode violar o princípio de encapsulamento da programação orientada a objetos
+- Uma alteração realizada na classe pai pode provocar uma mudança drástica de comportamento das classes filhas
+- Funções herdadas possuem execução mais lenta
+- Uma classe filha pode herdar elementos desenecessários de uma classe pai, aumento o consumo de memória do programa
+- A herança  
+
+Acho interessante destacar o chamado ["movimento anti if"](https://francescocirillo.com/pages/anti-if-campaign) que ganhou força na internet. Esse movimento visa promover o uso correto da orientação a objetos para evitar designes de código ruins.
 
 ---
 
