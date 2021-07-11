@@ -65,30 +65,6 @@ std::string justifyParagraph(const std::string & input, int targetLength) {
 	return formatted;
 }
 
-MyStringVector getParagraphs(const std::string & text) {
-
-	std::string paragraph = "";
-	MyStringVector paragraphVector;
-
-	for(char character : text) {
-
-		if(character != '\n') { 
-		
-			paragraph += character;
-		
-		} else {
-
-			paragraph += character;
-			paragraphVector.push_back(paragraph);
-			paragraph.clear();
-		}
-	}
-
-	paragraphVector.push_back(paragraph);
-
-	return paragraphVector;
-}
-
 MyStringVector getParagraphWords(const std::string & paragraph) {
 
 	std::string newWord = "";

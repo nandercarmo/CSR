@@ -32,7 +32,7 @@ O formatador de texto especificado foi implementado e está disponível no arqui
 
 Para implementar o formatador descrito foram criadas as seguintes funções auxiliares, cujos parâmetros, retorno e funcionalidade básica serão detalhadas a seguir:
 
-- *MyStringVector*:
+- **MyStringVector**:
 	
 	```cpp 
 	typedef std::vector<std::string> MyStringVector;
@@ -48,7 +48,7 @@ Para implementar o formatador descrito foram criadas as seguintes funções auxi
 
 	Esse tipo foi criado para facilitar o uso de iterators do tipo vetor de strings.
 
-- *justifyParagraph*
+- **justifyParagraph**
 
 	```cpp 
 	std::string justifyParagraph(const std::string & input, int targetLength);
@@ -61,34 +61,40 @@ Para implementar o formatador descrito foram criadas as seguintes funções auxi
 	- Funcionalidade: realiza a extração das palavras do texto, através da chamada da fução getParagraphWords, seguida da definição de quais palavras estarão em cada linha do texto. Feito isso a função getFormattedRow é chamada para efetivamente formatar a linha desejada com o alinhamento justificado.
 	
 
-- *getParagraphWords*
+- **getParagraphWords**
 
 	```cpp 
 	MyStringVector getParagraphWords(const std::string & paragraph);
 	```
 
 	- Parâmetros: uma string **pargraph** contendo o parágrafo que será formatado.
+	
 	- Retorno: um vetor de strings contendo todas as palavras (e símbolos) do parágrafo.
+	
 	- Funcionalidade: percorre o parágrafo realizando o tratamento do texto, eliminando qualquer espaço presente no texto e retornando apenas as palavras e símbolos.
 
-- *getFormattedRow*
+- **getFormattedRow**
 
 	```cpp 
 	std::string getFormattedRow(MyVectorIterator & rowFirstWord, MyVectorIterator & rowLastWord, int rowCharCount, int targetLength, bool isLastRow);
 	```
 
 	- Parâmetros: dois iterators **rowFistWord** e **rowLastWord**, responsáveis por armazenar a primeira e a última palavra do vetor que deverá aparecer na linha a ser formatada, um inteiro **rowCharCount** contendo a quantidade de caracteres válidos (que não são espaços) que a linha possui, um inteiro **targetLength** contendo a largura da linha e, por fim um booleano **isLastRow** que indica se a linha sendo formatada é a última linha do parágrafo (essa linha não deve ser formatada).
+	
 	- Retorno: uma string contendo a linha formatada.
+	
 	- Funcionalidade: percorre as palavras do parágrafo que deverão estar presentes da linha adicionando espaçamento entre elas, até atingir a largura total da linha.
 
-- *printVector*
+- **printVector**
 
 	```cpp 
 	void printVector(MyStringVector & vctr);
 	```
 
 	- Parâmetros: um vetor **vctr** que se deseja printar.
+	
 	- Retorno: essa função não retorna nada.
+	
 	- Funcionalidade: essa função auxiliar percorre as strings do vetor passado como parâmetro e printa esses valores formatados.
 	
 ---
@@ -98,6 +104,34 @@ Para implementar o formatador descrito foram criadas as seguintes funções auxi
 <p align="center">
   <img src="resources/q2.png">
 </p>
+
+A código final do formatador de texto, após a implementação da função **justifyDocument** está disponível no arquivo:
+
+- [source/question2/my-formatter-2.cpp](source/question2/my-formatter-2.cpp)
+
+Para implementar essa nova funcionalidade foi preciso apenas adicionar mais uma função auxiliar de forma a identificar e separar os parágrafos do texto:
+
+- **justifyDocument**
+
+	```cpp 
+	std::string justifyDocument(const std::string & input, int targetLength);
+	```
+
+	- Parâmetros: uma string **input** contendo o texto que se deseja formatar e um inteiro **targetLength** reponsável por indicar a largura final do texto.
+
+	- Retorno: uma string contendo o texto formatado.
+
+	- Funcionalidade: essa função realiza a divisão do texto em parágrafos através da chamada interna da função **getParagraphs** e realiza a formatação de cada um desses parágrafos da mesma forma que foi descrita na [Questão 1](#questão-1)
+
+- **getParagraphs**
+
+	```cpp 
+	MyStringVector getParagraphs(const std::string & text);
+	```
+
+	- Parâmetros: uma string **text** contendo o texto que se deseja dividir em parágrafos.
+	- Retorno: um vetor de strings contendo os parágrafos do texto recebido.
+	- Funcionalidade: percorre o texto identificando sempre que aparece uma quebra de linha, indicando um parágrafo, e realiza a divisão em strings em um vetor.
 
 ---
 
