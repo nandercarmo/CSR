@@ -1,2 +1,321 @@
-# CSR
-Teste do CSR.
+# **CSR**
+Teste de habilidades da vaga de desenvolvedor do [**CSR**](https://csr.ufmg.br/csr/pt/) de **Nander Carmo**.
+
+Julho de 2021.
+
+---
+
+## **Índice**
+
+- [Questão 1](#questão-1)
+- [Questão 2](#questão-2)
+- [Questão 3](#questão-3)
+	- [Classe](#classe)
+	- [Herança x Herança x Tratamento Condicional](#herança-x-tratamento-condicional)
+- [Questão 4](#questão-4)
+	- [Referências x Ponteiros](#referências-x-ponteiros)
+	- [Smart Pointers](#smart-pointers)
+- [Questão 5](#questão-5)
+
+---
+
+## **Questão 1**
+
+<p align="center">
+  <img src="resources/q1.png">
+</p>
+
+---
+
+## **Questão 2**
+
+<p align="center">
+  <img src="resources/q2.png">
+</p>
+
+### **Classe**
+
+### **Herança x Tratamento Condicional**
+
+---
+
+## **Questão 3**
+
+<p align="center">
+  <img src="resources/q3.png">
+</p>
+
+---
+
+## **Questão 4**
+
+### **Referências x Ponteiros**
+
+<p align="center">
+  <img src="resources/q4.png">
+</p>
+
+Referências (&) em C++ são semelhantes a ponteiros (*) por se tratarem de instâncias de uma outra variável, porém, ao contrário de um ponteiro que pode ser reatribuído para outro endereço durante a execução do programa, uma referência só pode ser atribuída uma única vez. Assim, uma vez inicializada uma referência, qualquer operação realizada com ela é equivalente à mesma operação sendo realizada utilizando a variável original.
+
+Exemplo:
+
+```cpp
+#include <iostream>
+
+int main() {
+
+	int var1 = 1;
+	int var2 = 2;
+
+	int * ptr = &var1;
+	int & ref = var1;
+
+	// Valores iniciais
+	std::cout << "ptr: " << *ptr;
+	std::cout << ", ref: " << ref;
+	std::cout << ", var1: " << var1;
+	std::cout << ", var2: " << var2 << std::endl;
+
+	ptr = &var2;
+
+	// É possível reatribuir o valor apontado por um ponteiro
+	std::cout << "ptr: " << *ptr;
+	std::cout << ", ref: " << ref;
+	std::cout << ", var1: " << var1;
+	std::cout << ", var2: " << var2 << std::endl;
+
+	ref = var2;
+
+	// Ao tentar reatribuir uma referência, a variável referenciada por ela é alterada também
+	// Não é possível reatribuir uma referência
+	std::cout << "ptr: " << *ptr;
+	std::cout << ", ref: " << ref;
+	std::cout << ", var1: " << var1;
+	std::cout << ", var2: " << var2 << std::endl;
+
+	return 0;
+}
+```
+
+Retorna:
+
+```bash
+ptr: 1, ref: 1, var1: 1, var2: 2
+ptr: 2, ref: 1, var1: 1, var2: 2
+ptr: 2, ref: 2, var1: 2, var2: 2
+```
+
+De forma, simplificada pode-se falar que a referência e o objeto original são a mesma coisa, enquanto o ponteiro se trata de um _apontador_ para o endereço daquela variável. Isso pode ser verificado através dos endereços das variáveis. É possível perceber que o ponteiro se trata de um novo objeto enquanto a referência é o mesmo objeto que var1 (a referência é um "apelido" para aquela variável).
+
+Exemplo:
+
+```cpp
+#include <iostream>
+
+int main() {
+
+	int var1 = 1;
+
+	int * ptr = &var1;
+	int & ref = var1;
+
+	// Valores iniciais
+	std::cout << "ptr: " << &ptr;
+	std::cout << ", ref: " << &ref;
+	std::cout << ", var1: " << &var1 << std::endl;
+
+	return 0;
+}
+```
+
+Retorna:
+
+```bash
+ptr: 0x7ffde51fea78, ref: 0x7ffde51fea74, var1: 0x7ffde51fea74
+```
+
+Dessa forma, um ponteiro atua como uma variável independente que pode ser remanejada e reutilizada, enquanto a referência é extritamente relacionada à variável inicial. Além disso, uma referência não existe por si só e, por isso, não pode ser nula, ao contrário de um ponteiro.
+
+Exemplo:
+
+```cpp
+int main() {
+
+	int * ptr;
+	int & ref;
+
+	return 0;
+}
+```
+
+Esse programa, se compilado, resulta em um erro, uma referência precisa ser inicializada no momento da declaração:
+
+Retorna:
+
+
+```bash
+null.cpp: In function ‘int main()’:
+null.cpp:4:8: error: ‘ref’ declared as reference but not initialized
+    4 |  int & ref;
+      |        ^~~
+
+compilation failed!
+```
+
+Tendo entendido isso, as vantagens de se usar referência no lugar de ponteiros são:
+
+- Referências são mais simples: por atuarem como a própria variável, não é necessário utilizar o operador de desreferenciamento (*) para manipular seu valor. Exemplo: uma estrutura ou um objeto podem ser acessados através do operador (.) e não do (->).
+
+- Referências são mais seguras já que, por precisarem ser inicializadas no momento da declaração, situações como a de um [wild pointer](https://www.geeksforgeeks.org/what-are-wild-pointers-how-can-we-avoid/) (um ponteiro não inicializado, que aponta pra uma região randômica da memória e que pode provocar erros de execução e acesso indevido de dados) não acontecem.
+
+Enquanto as desvantagens de se utilizar referências são:
+
+- Uma referência não pode ser nula.
+- Uma referência não pode ser utilizada para a manipulação de uma sequência de dados, como um ponteiro. Não é possível percorrer um array nem utilizar operadores do tipo increment/decrement. Sendo assim uma referência não pode ser usada para a criação de estruturas de dados como listas encadeadas, pilhas, filas, etc.
+- Uma vez criada a referência esta não pode ser resetada nem reutilizada.
+
+### **Smart pointers**
+
+Smart pointers funcionam basicamente igual a um ponteiro normal, porém garantem que o objeto apontado será destruído no fim do ciclo de seu ciclo de vida. Por exemplo, no caso de uma exceção que impeça que um ponteiro tradicional seja deletado corretamente, a memória apontada por esse ponteiro permaneceria alocada provocando um memory leak.
+
+Exemplo:
+
+```cpp
+#include <iostream>
+#include <memory>
+
+int main() {
+	
+	int * ptrRegular = new int(5);
+	std::unique_ptr<int> ptrSmart(new int(10));
+
+	std::cout << "ptrRegular: " << *ptrRegular;
+	std::cout << ", ptrSmart: " << *ptrSmart << std::endl;
+
+	delete ptrRegular; // É preciso liberar a memória alocada
+
+	return 0;
+}
+```
+
+Retorna:
+
+```bash
+ptrRegular: 5, ptrSmart: 10
+```
+
+É possível criar dois tipos de smart pointers: unique_str e shared_str. A difereça entre esses dois tipos é que o unique_str não permite a cração de duplicatas, ou seja, não é possível criar cópias do smart pointer, o que não acontece no caso do shared_ptr:
+
+```cpp
+#include <iostream>
+#include <memory>
+
+int main() {
+
+	std::shared_ptr<int> ptr1(new int());
+	std::shared_ptr<int> ptr2 = ptr1;
+
+	*ptr1 = 100;
+
+	std::cout << "ptr1: " << *ptr1;
+	std::cout << ", ptr2: " << *ptr2 << std::endl;
+
+	return 0;
+}
+```
+
+Retorna:
+
+```bash
+ptr1: 100, ptr2: 100
+```
+
+Ao tentar fazer isso com um smart pointer unique_str, o compilador apontará um erro:
+
+```cpp
+#include <iostream>
+#include <memory>
+
+int main() {
+
+	std::unique_ptr<int> ptr1(new int());
+	std::unique_ptr<int> ptr2 = ptr1;
+
+	*ptr1 = 100;
+
+	std::cout << "ptr1: " << *ptr1;
+	std::cout << ", ptr2: " << *ptr2 << std::endl;
+
+	return 0;
+}
+```
+
+Retorna:
+
+```bash
+unique.cpp: In function ‘int main()’:
+unique.cpp:7:30: error: use of deleted function ‘std::unique_ptr<_Tp, _Dp>::unique_ptr(const std::unique_ptr<_Tp, _Dp>&) [with _Tp = int; _Dp = std::default_delete<int>]’
+    7 |  std::unique_ptr<int> ptr2 = ptr1;
+      |                              ^~~~
+In file included from /usr/include/c++/9/memory:80,
+                 from unique.cpp:2:
+/usr/include/c++/9/bits/unique_ptr.h:414:7: note: declared here
+  414 |       unique_ptr(const unique_ptr&) = delete;
+      | 
+```
+
+Existe ainda um terceiro tipo weak_ptr que é similar ao shared_ptr, mas que não realiza a contagem de ponteiros relacionados ao mesmo objeto e que é utilizado para solucionar problemas de apontamento circular entre objetos (como em listas duplamente encadeadas, por exemplo), mas não será descrito aqui.
+
+Assim, algumas vantagens de se utilizar smart pointers:
+
+- Não é preciso se preocupar com falhas na liberação de memória de um objeto e em ter um _delete_ em todas os possíveis retornos de uma função
+- Automaticamente libera a memória em casos de exceções extraordinárias que provocariam memory leak utilizando um ponteiro convencional
+- Evita a ocorrência de dumb pointers (ponteiros que apontam para objetos já deletados)
+
+Porém, existem também desvantagens, como:
+
+- Um smart_pointer é relativamente mais lento do que um ponteiro convencional e, em casos extremos pode provocar perda de performance
+- Caso um smart pointer seja criado a partir de um ponteiro tradicional em uma função com tempo de vida menor que o ponteiro original, quando encerrar o escopo desa função o smart pointer será destruído, e assim o ponteiro original passará a pontar pra uma região inválida de memória (um dangling pointer). Exemplo:
+
+	```cpp
+	#include <iostream>
+	#include <memory>
+
+	int main() {
+		
+		int * ptrRegular = new int(5);
+		
+		{
+			std::shared_ptr<int> ptrSmart;
+			ptrSmart.reset(ptrRegular);
+
+			std::cout << "ptrRegular: " << *ptrRegular;
+			std::cout << ", ptrSmart: " << *ptrSmart << std::endl;
+		}
+
+		delete ptrRegular; // Tenta liberar um espaço de memória que já foi liberado
+
+		return 0;
+	}
+	```
+
+	Retorna:
+
+	```bash
+	ptrRegular: 5, ptrSmart: 5
+	free(): double free detected in tcache 2
+	/usr/bin/compile, linha 86: 159242 Abortado                (imagem do núcleo gravada) ./$name
+	```
+- No caso de referência circular, um smart pointer do tipo shared_ptr nunca seria destruído, porque a quantidade de referências armazenada pelo ponteiro nunca seria zerada, e o ponteiro só é destruído quando esse valor é igual a 0, mas esse problema, como mencionado acima pode ser solucionado utilizando um weak_ptr. Apesar de existir solução é preciso se atentar a isso para não provocar memory leaks.
+- A declaração de shared_ptr em funções distintar, com tempo de vida diferentes, mas apontando para um mesmo objeto pode provocar novamente a criação de ponteiros que apontam para regiões inválidas de memória.
+- Ao passar um shared_ptr como parâmetro, procurar sempre passar como referência, já que a nova cópia criada no escopo da função de destino não seria contada como instâncias do ponteiro original e, assim, este poderia ser deletado de forma equivocada.
+
+---
+
+## **Questão 5**
+
+<p align="center">
+  <img src="resources/q5.png">
+</p>
+
+---

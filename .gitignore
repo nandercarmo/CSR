@@ -1,6 +1,12 @@
 source/question1/my-formatter
 source/question2/my-formatter-2
 source/question3/main
+source/question4/address
+source/question4/dangling
+source/question4/ref-ptr
+source/question4/shared
+source/question4/smart-pointers
+
 
 # Prerequisites
 *.d
