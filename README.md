@@ -56,7 +56,7 @@ Para implementar o formatador descrito foram criadas as seguintes funções auxi
 
 	- Retorno: uma string contendo o texto formatado.
 
-	- Funcionalidade: realiza a extração das palavras do texto, através da chamada da fução getParagraphWords, seguida da definição de quais palavras estarão em cada linha do texto. Feito isso a função getFormattedRow é chamada para efetivamente formatar a linha desejada com o alinhamento justificado.
+	- Funcionalidade: realiza a extração das palavras do texto, através da chamada da fução **getParagraphWords**, seguida da definição de quais palavras estarão em cada linha do texto. Feito isso a função **getFormattedRow** é chamada para efetivamente formatar a linha desejada com o alinhamento justificado.
 	
 
 - **getParagraphWords**
@@ -65,7 +65,7 @@ Para implementar o formatador descrito foram criadas as seguintes funções auxi
 	MyStringVector getParagraphWords(const std::string & paragraph);
 	```
 
-	- Parâmetros: uma string **pargraph** contendo o parágrafo que será formatado.
+	- Parâmetros: uma string **paragraph** contendo o parágrafo que será formatado.
 	
 	- Retorno: um vetor de strings contendo todas as palavras (e símbolos) do parágrafo.
 	
@@ -151,18 +151,21 @@ A implementação final do formatador utilizando classe está contida nos arquiv
 
 Para a implementação do mesmo formatador utilizando classes foi realizado o seguinte raciocício: as funções implementadas no formatador **justifyParagraph**, **getParagraphWords** e **getFormattedRow** correspondem a manipulações que são realizadas nos parágrafos e logo foram transformadas em métodos da classe **Paragraph**; já as funções **justifyDocument**, **getParagraphs** são funções intrínsecas ao documento e, assim, foram transformadas em métodos da classe **Document**.
 
-As funções equivalente à classe **Paragraph** foram renomeadas e receberam novas assinaturas, de forma a ficar mais legível no contexto de uma classe, ficando da seguinte forma:
+As funções equivalentes à classe **Paragraph** foram renomeadas e receberam novas assinaturas, de forma a ficar mais legível no contexto de uma classe, ficando da seguinte forma:
 
 - justifyParagraph -> **format**
+
 - getParagraphWords -> **getWords**
+
 - getFormattedRow -> **formatRow**
 
-As funções equivalente à classe **Document** foram renomeadas e receberam uma nova assinatura, de forma a ficar mais legível no contexto de uma classe, ficando da seguinte forma:
+As funções equivalentes à classe **Document** foram renomeadas e receberam uma nova assinatura, de forma a ficar mais legível no contexto de uma classe, ficando da seguinte forma:
 
 - justifyDocument -> **format**
+
 - getParagraphs -> **getParagraphs**
 
-Além disso, as variáveis utilizadas dentro das funções e que são passadas como parâmetros foram transformadas em campos das classes. Dessa forma, a definição das duas classes ficou da seguinte forma:
+Além disso, as variáveis utilizadas dentro das funções e que são passadas como parâmetros foram transformadas em campos das classes e foi adicionado em ambas a classe o método **setTargetLength** que permite a alteração da largura da linha. Dessa forma, a definição das duas classes ficou da seguinte forma:
 
 ```cpp
 class Paragraph {
@@ -213,7 +216,7 @@ class Document {
 
 ### **Novas Formatações**
 
-Para implementar novos formatadores utilizando de herança seria necessário, primeiro transformar o método *Paragraph::formatRow()* em um método virtual, para permitir que ele seja reimplementada por outras classes que herdem a classe básica *Paragraph*. Além disso, para que as classes herdeiras tenham acesso aos métodos e campos marcados *private* originalmente, será preciso alterar esse marcador para *protected*. Dessa forma:
+Para implementar novos formatadores utilizando do conceito de herança seria necessário, primeiro, transformar o método **Paragraph::formatRow()** em um método virtual, para permitir que ele seja reimplementada por outras classes que herdem a classe básica **Paragraph**. Além disso, para que as classes herdeiras tenham acesso aos métodos e campos marcados como **private** originalmente, será preciso alterar esse marcador para **protected**. Dessa forma:
 
 ```cpp
 class Paragraph {
@@ -241,7 +244,7 @@ class Paragraph {
 };
 ```
 
-Dessa forma, será possível criar classes que herdam da classe *Paragraph* e possuem seus próprios métodos *formatRow*:
+Dessa forma, será possível criar classes que herdam da classe **Paragraph** e possuem seus próprios métodos **formatRow**:
 
 ```cpp
 class CentralizedParagraph : public Paragraph  {
@@ -281,9 +284,9 @@ class RightAlignedParagraph : public Paragraph {
 }
 ```
 
-Enquanto isso, a classe pai *Pargraph* possui como padrão o método formatRow retornando um parágrafo justificado, conforme já demonstrado anteriormente.
+Enquanto isso, a classe pai **Pargraph** possui como padrão o método formatRow retornando um parágrafo justificado, conforme já demonstrado anteriormente.
 
-No caso da classe *Document* não será necessário reimplementar nenhum método, porém, como as novas classes herdeiras utilização uma classe filha da *Paragraph* e a classe *Document* possui um campo dependente do tipo de parágrafo (*Document::_m_pargraph*), será preciso utilizar de *templates* para simplificar essa implementação. Dessa forma a classe pai *Document* e as classes herdeiras ficarão da seguinte forma:
+No caso da classe **Document** não será necessário reimplementar nenhum método, porém, como as novas classes herdeiras utilizam uma classe filha da **Paragraph** e a classe **Document** possui um campo dependente do tipo de parágrafo (**Document::_m_pargraph**), será preciso utilizar de **templates** para simplificar essa implementação. Dessa forma a classe pai **Document** e as classes herdeiras ficarão da seguinte forma:
 
 ```cpp
 template<typename T>
@@ -320,7 +323,10 @@ class RightAlignedDocument : public Document<RightAlignedPargraph> {
 
 Vantagens do uso de herança em relação a ifs/switches:
 
-- O excesso de ifs (ou um switch muito extenso) pode aumentar muito a complexidade de um código e dificultar modificações e a manutenção do código, visto que, invariavelmente, quando uma verificação nesse estilo é necessário em um determinado ponto do código, essa mesma verificação poderá ser necessária em outras regiões. Dessa forma, é possível que erros sejam cometidos por não realizar uma determinada alteração em todo o código, criando falhas de execução. Além disso, essa prática viola o conceito de DRY (Don't repeat yourself), considerada uma boa prática de programação.
+- O excesso de ifs (ou um switch muito extenso) pode aumentar muito a complexidade de um código e dificultar modificações e a manutenção do código, visto que, invariavelmente, quando uma verificação nesse estilo é necessária em algum ponto do código, essa mesma verificação poderá ser necessária em outras regiões. Dessa forma, é possível que erros sejam cometidos por não realizar uma determinada alteração em todo o código, criando falhas de execução. 
+
+- O uso de cadeias de ifs ou switches pode violar o conceito de DRY (Don't repeat yourself), considerada uma boa prática de programação.
+
 - O uso de herança aumenta a legibilidade do código e torna mais simples seu entendimento
 
 Desvantagens do uso de herança em relação a ifs/switches:
@@ -329,9 +335,8 @@ Desvantagens do uso de herança em relação a ifs/switches:
 - Uma alteração realizada na classe pai pode provocar uma mudança drástica de comportamento das classes filhas
 - Funções herdadas possuem execução mais lenta
 - Uma classe filha pode herdar elementos desenecessários de uma classe pai, aumento o consumo de memória do programa
-- A herança  
 
-Acho interessante destacar o chamado ["movimento anti if"](https://francescocirillo.com/pages/anti-if-campaign) que ganhou força na internet. Esse movimento visa promover o uso correto da orientação a objetos para evitar designes de código ruins.
+Por fim, acho interessante destacar o chamado ["movimento anti if"](https://francescocirillo.com/pages/anti-if-campaign) que ganhou força na internet. Esse movimento visa promover o uso correto da orientação a objetos para evitar um design de código ruim e que inclue como um dos principais alvos a utilização de cadeias de ifs ou switches em situações em que o uso de herança pode ser mais adequado.
 
 ---
 
@@ -343,7 +348,7 @@ Acho interessante destacar o chamado ["movimento anti if"](https://francescociri
   <img src="resources/q4.png">
 </p>
 
-Referências (&) em C++ são semelhantes a ponteiros (*) por se tratarem de instâncias de uma outra variável, porém, ao contrário de um ponteiro que pode ser reatribuído para outro endereço durante a execução do programa, uma referência só pode ser atribuída uma única vez. Assim, uma vez inicializada uma referência, qualquer operação realizada com ela é equivalente à mesma operação sendo realizada utilizando a variável original.
+Referências (&) em C++ são semelhantes a ponteiros (*) por se tratarem de "instâncias" de uma outra variável, porém, ao contrário de um ponteiro que pode ser reatribuído para outro endereço durante a execução do programa, uma referência só pode ser atribuída uma única vez. Assim, uma vez inicializada uma referência, qualquer operação realizada com ela é equivalente à mesma operação sendo realizada utilizando a variável original.
 
 Exemplo:
 
@@ -459,7 +464,9 @@ Tendo entendido isso, as vantagens de se usar referência no lugar de ponteiros 
 Enquanto as desvantagens de se utilizar referências são:
 
 - Uma referência não pode ser nula.
+
 - Uma referência não pode ser utilizada para a manipulação de uma sequência de dados, como um ponteiro. Não é possível percorrer um array nem utilizar operadores do tipo increment/decrement. Sendo assim uma referência não pode ser usada para a criação de estruturas de dados como listas encadeadas, pilhas, filas, etc.
+
 - Uma vez criada a referência esta não pode ser resetada nem reutilizada.
 
 ### **Smart pointers**
@@ -556,13 +563,18 @@ Existe ainda um terceiro tipo weak_ptr que é similar ao shared_ptr, mas que nã
 
 Assim, algumas vantagens de se utilizar smart pointers:
 
-- Não é preciso se preocupar com falhas na liberação de memória de um objeto e em ter um _delete_ em todas os possíveis retornos de uma função
-- Automaticamente libera a memória em casos de exceções extraordinárias que provocariam memory leak utilizando um ponteiro convencional
-- Evita a ocorrência de dumb pointers (ponteiros que apontam para objetos já deletados)
+- Não é preciso se preocupar com falhas na liberação de memória de um objeto e em ter um **delete** em todas os possíveis retornos de uma função.
+
+- Automaticamente libera a memória em casos de exceções extraordinárias que provocariam memory leak utilizando um ponteiro convencional.
+
+- Evita a ocorrência de dumb pointers (ponteiros que apontam para objetos já deletados).
 
 Porém, existem também desvantagens, como:
 
-- Um smart_pointer é relativamente mais lento do que um ponteiro convencional e, em casos extremos pode provocar perda de performance
+- Um smart_pointer é relativamente mais lento do que um ponteiro convencional e, em casos extremos pode provocar perda de performance.
+
+- Um smart_pointer consome mais memória que um ponteiro tradicional.
+
 - Caso um smart pointer seja criado a partir de um ponteiro tradicional em uma função com tempo de vida menor que o ponteiro original, quando encerrar o escopo desa função o smart pointer será destruído, e assim o ponteiro original passará a pontar pra uma região inválida de memória (um dangling pointer). Exemplo:
 
 	```cpp
@@ -594,8 +606,10 @@ Porém, existem também desvantagens, como:
 	free(): double free detected in tcache 2
 	/usr/bin/compile, linha 86: 159242 Abortado                (imagem do núcleo gravada) ./$name
 	```
-- No caso de referência circular, um smart pointer do tipo shared_ptr nunca seria destruído, porque a quantidade de referências armazenada pelo ponteiro nunca seria zerada, e o ponteiro só é destruído quando esse valor é igual a 0, mas esse problema, como mencionado acima pode ser solucionado utilizando um weak_ptr. Apesar de existir solução é preciso se atentar a isso para não provocar memory leaks.
-- A declaração de shared_ptr em funções distintar, com tempo de vida diferentes, mas apontando para um mesmo objeto pode provocar novamente a criação de ponteiros que apontam para regiões inválidas de memória.
+- No caso de referência circular, um smart pointer do tipo shared_ptr nunca seria destruído, porque a quantidade de referências armazenada pelo ponteiro nunca seria zerada, e o ponteiro só é destruído quando esse valor é igual a 0. Esse problema, como mencionado acima pode ser solucionado utilizando um weak_ptr, porém, apesar de existir solução é preciso se atentar a isso para não provocar memory leaks.
+
+- A declaração de shared_ptr em funções distintar, com tempo de vida diferentes, mas apontando para um mesmo objeto pode provocar novamente a criação de ponteiros que apontam para regiões inválidas de memória, já que quando um dos ponteiros for destruído devido ao fim do ciclo de vida da função ele destruirá o objeto.
+
 - Ao passar um shared_ptr como parâmetro, procurar sempre passar como referência, já que a nova cópia criada no escopo da função de destino não seria contada como instâncias do ponteiro original e, assim, este poderia ser deletado de forma equivocada.
 
 ---
@@ -606,11 +620,11 @@ Porém, existem também desvantagens, como:
   <img src="resources/q5.png">
 </p>
 
-Por definição, [RAII](https://en.cppreference.com/w/cpp/language/raii) (Resource Acquisition Is Initialization, ou Aquisição de Recurso é Inicialização) é um padrão de projeto de software que ajuda a tornar segura a manipulação de recursos (muitas vezes sensíveis). Esse segurança bem do fato de que o tempo de vida do recurso fica vinculado ao tempo de vida de um objeto. Dessa forma, a aquisição do recurso fica diretamente associada à inicialização de um objeto, enquanto a liberação desse mesmo recurso fica associada à destruição desse objeto, em outras palavras, o recurso é solicitado pelo contrutor do objeto e é liberado pelo destrutor.
+Por definição, [RAII](https://en.cppreference.com/w/cpp/language/raii) (Resource Acquisition Is Initialization, ou Aquisição de Recurso é Inicialização) é um padrão de projeto de software que ajuda a tornar segura a manipulação de recursos (muitas vezes sensíveis). Essa segurança vem do fato de que o tempo de vida do recurso fica vinculado ao tempo de vida de um objeto. Dessa forma, a aquisição do recurso fica diretamente associada à inicialização de um objeto, enquanto a liberação desse mesmo recurso fica associada à destruição desse objeto, em outras palavras, o recurso é solicitado pelo contrutor do objeto e é liberado pelo destrutor.
 
 Assim, é possível substituir o uso do try/catch porque, independente do caminho que a execução do programa assuma, é garantido que o recurso será liberado quando o objeto ao qual ele está vinculado for destruído, não sendo preciso realizar a liberação do recurso em um tratamento de excessão.
 
-Portanto, as modificações necessárias de serem realizadas está na remoção do try/catch e na criação de uma classe para o tipo File da seguinte forma (obs: nesse momento eu considerei que o tipo File existe, apesar de ser fictício e que para a implementação da RAII eu poderia criar uma classe nova):
+Portanto, as modificações necessárias de serem realizadas está na remoção do try/catch e na criação de uma classe para o tipo File da seguinte forma (obs: nesse momento eu considerei que o tipo File existe, apesar de ser fictício, e que para a implementação da RAII eu poderia criar uma classe nova):
 
 ```cpp
 class File {
